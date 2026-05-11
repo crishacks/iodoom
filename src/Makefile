@@ -59,7 +59,7 @@ SRC_DOOM = \
   v_video.o \
   wi_stuff.o \
   w_checksum.o w_file.o w_main.o w_wad.o w_file_stdc.o \
-  i_input.o i_video.o \
+  i_input.o i_video.o z_zone.o \
   iodoom_engine.o
 
 # ── SDL2 target (default) ────────────────────────────────────
