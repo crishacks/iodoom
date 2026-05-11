@@ -1,0 +1,92 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-linux:
+    name: Build Linux binary
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -qq && sudo apt-get install -y libsdl2-dev
+      - working-directory: src
+        run: make sdl RELEASE=1 -j$(nproc)
+      - run: |
+          mkdir -p dist
+          cp src/iodoom dist/iodoom-linux-x86_64
+          chmod +x dist/iodoom-linux-x86_64
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-binary
+          path: dist/iodoom-linux-x86_64
+
+  build-macos:
+    name: Build macOS binary
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install sdl2
+      - working-directory: src
+        run: make sdl RELEASE=1 -j$(sysctl -n hw.logicalcpu)
+      - run: |
+          mkdir -p dist
+          cp src/iodoom dist/iodoom-macos-arm64
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-binary
+          path: dist/iodoom-macos-arm64
+
+  release:
+    name: Create GitHub Release
+    needs: [build-linux, build-macos]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: linux-binary
+          path: dist/
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: macos-binary
+          path: dist/
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "iodoom ${{ github.ref_name }}"
+          body: |
+            ## iodoom ${{ github.ref_name }}
+
+            A user-friendly fork of doomgeneric.
+
+            ### Downloads
+            - **Linux x86_64** – `iodoom-linux-x86_64`
+            - **macOS ARM64** – `iodoom-macos-arm64`
+
+            ### Usage
+            ```
+            ./iodoom -iwad /path/to/doom.wad
+            ```
+
+            ### Environment Variables
+            | Variable | Default | Description |
+            |---|---|---|
+            | `IODOOM_SCALE` | `0` | 0=auto-fit, 1/2/3=integer scale |
+            | `IODOOM_FPS` | `35` | FPS cap (35 = Doom native) |
+            | `IODOOM_VSYNC` | `0` | VSync on/off |
+            | `IODOOM_FULLSCREEN` | `0` | Start fullscreen |
+            | `IODOOM_MOUSE` | `0` | Enable mouse look |
+          files: |
+            dist/iodoom-linux-x86_64
+            dist/iodoom-macos-arm64
+          draft: false
+          prerelease: false

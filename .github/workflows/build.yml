@@ -1,0 +1,55 @@
+name: Build
+
+on:
+  push:
+    branches: [main, master, dev]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  build-linux:
+    name: Linux (SDL2)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y libsdl2-dev clang gcc
+
+      - name: Build (debug)
+        working-directory: src
+        run: make sdl CC=gcc -j$(nproc)
+
+      - name: Build (release)
+        working-directory: src
+        run: make sdl CC=gcc RELEASE=1 -j$(nproc)
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: iodoom-linux-x86_64
+          path: src/iodoom
+
+  build-linux-clang:
+    name: Linux (clang)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -qq && sudo apt-get install -y libsdl2-dev clang
+      - working-directory: src
+        run: make sdl CC=clang -j$(nproc)
+
+  build-macos:
+    name: macOS (SDL2)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install sdl2
+      - working-directory: src
+        run: make sdl -j$(sysctl -n hw.logicalcpu)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: iodoom-macos-arm64
+          path: src/iodoom

@@ -1,0 +1,7 @@
+src/build/
+src/iodoom
+src/iodoom-xlib
+src/*.map
+*.o
+*.d
+dist/

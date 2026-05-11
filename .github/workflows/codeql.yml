@@ -1,0 +1,25 @@
+name: CodeQL
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  schedule:
+    - cron: '30 4 * * 1'  # Every Monday
+
+jobs:
+  analyze:
+    name: Analyze C
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -qq && sudo apt-get install -y libsdl2-dev
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: c-cpp
+      - working-directory: src
+        run: make sdl -j$(nproc)
+      - uses: github/codeql-action/analyze@v3
