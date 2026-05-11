@@ -284,7 +284,7 @@ void R_DrawFuzzColumn (void)
 { 
     int			count; 
     byte*		dest; 
-    fixed_t		frac;
+    fixed_t		frac __attribute__((unused));
     fixed_t		fracstep;	 
 
     // Adjust borders. Low... 
@@ -344,7 +344,7 @@ void R_DrawFuzzColumnLow (void)
     int			count; 
     byte*		dest; 
     byte*		dest2; 
-    fixed_t		frac;
+    fixed_t		frac __attribute__((unused));
     fixed_t		fracstep;	 
     int x;
 
