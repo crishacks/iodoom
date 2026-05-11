@@ -79,7 +79,7 @@ sdl: EXTRA_CFLAGS  = $(SDL_CFLAGS)
 sdl: EXTRA_LIBS    = $(SDL_LIBS)
 sdl: $(OBJDIR) $(OBJS_SDL)
 	@echo "  LD    $(OUTPUT)"
-	$(Q)$(CC) $(CFLAGS) $(EXTRA_CFLAGS) $(OBJS_SDL) -o $(OUTPUT) $(LDFLAGS) $(EXTRA_LIBS) -Wl,-Map,$(OUTPUT).map
+	$(Q)$(CC) $(CFLAGS) $(EXTRA_CFLAGS) $(OBJS_SDL) -o $(OUTPUT) $(LDFLAGS) $(EXTRA_LIBS)
 	@echo "  SIZE"
 	$(Q)size $(OUTPUT)
 	@echo ""
