@@ -2,7 +2,7 @@
 
 A user-friendly fork of [doomgeneric](https://github.com/ozkl/doomgeneric).
 
-![Build](https://github.com/yourname/iodoom/actions/workflows/build.yml/badge.svg)
+![Build](https://github.com/crishacks/iodoom/actions/workflows/build.yml/badge.svg)
 
 ## What's new vs doomgeneric
 
@@ -21,7 +21,7 @@ A user-friendly fork of [doomgeneric](https://github.com/ozkl/doomgeneric).
 ## Quick start
 
 ```bash
-git clone https://github.com/yourname/iodoom && cd iodoom
+git clone https://github.com/crishacks/iodoom && cd iodoom
 ./scripts/install.sh --wad /path/to/doom.wad
 ```
 
